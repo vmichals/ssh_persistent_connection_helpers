@@ -1,0 +1,12 @@
+#!/bin/bash
+
+
+if [ "$#" -eq 1 ]; then
+    HOST=$1
+else
+    echo "Usage: $0 <host>"
+    exit 1
+fi
+
+ssh_close $HOST
+ssh_persistent $HOST

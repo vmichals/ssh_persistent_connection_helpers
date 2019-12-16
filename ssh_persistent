@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+if [ "$#" -eq 1 ]; then
+    HOST=$1
+else
+    echo "Usage: $0 <host>"
+    exit 1
+fi
+
+ssh -o ControlPath=~/.ssh/ctl/%L-%r@%h:%p -O check ${HOST} 2>/dev/null
+SSH_STATUS=$?
+
+if [ $SSH_STATUS -ne 0 ]; then
+    echo "ControlMaster not active. Starting..."
+    ssh -nNf -o ControlMaster=yes -o ControlPath="$HOME/.ssh/ctl/%L-%r@%h:%p" ${HOST}
+    echo "Done." 
+else
+    echo "ControlMaster already running."
+fi
+echo "Connect using \r\tssh -o ControlPath=/home/vince/.ssh/ctl/%L-%r@%h:%p ${HOST}"
+
