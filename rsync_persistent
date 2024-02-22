@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+if [ "$#" -ge 1 ]; then
+    HOST=$1
+else
+    echo "rsync using a persistent ssh connection"
+    echo "Usage: $0 <host> [<rsync-options>] <src> <dest>"
+    exit 1
+fi
+
+ssh_persistent $HOST
+
+set -x
+rsync -e "ssh -o 'ControlPath=$HOME/.ssh/ctl/%L-%r@%h:%p'" "${@:2}"
